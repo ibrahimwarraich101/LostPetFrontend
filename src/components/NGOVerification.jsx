@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { submitVerification, fetchVerificationStatus } from '../api';
 import { ShieldCheck, Info, CheckCircle2, Clock, AlertTriangle, Building, Globe, Mail, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 export default function NGOVerification({ user }) {
   const [status, setStatus] = useState(null);
@@ -14,6 +15,7 @@ export default function NGOVerification({ user }) {
     website: '',
   });
   const [error, setError] = useState('');
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
 
   useEffect(() => {
     const load = async () => {
@@ -53,10 +55,14 @@ export default function NGOVerification({ user }) {
     setError('');
     
     if (!validateForm()) return;
+    if (!recaptchaToken) {
+      setError('Please verify that you are not a robot.');
+      return;
+    }
 
     setSubmitting(true);
     try {
-      const res = await submitVerification(form);
+      const res = await submitVerification({ ...form, recaptchaToken });
       setStatus(res.data);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to submit verification request.');
@@ -192,11 +198,15 @@ export default function NGOVerification({ user }) {
                 </div>
               </div>
 
-              {error && (
-                <div className="flex items-center gap-2 text-rose-600 bg-rose-50 px-4 py-2 rounded-xl text-xs font-medium">
-                  <AlertTriangle className="w-4 h-4" /> {error}
                 </div>
               )}
+
+              <div className="flex justify-center scale-90">
+                <ReCAPTCHA
+                  sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                  onChange={(token) => setRecaptchaToken(token)}
+                />
+              </div>
 
               <button 
                 type="submit" 

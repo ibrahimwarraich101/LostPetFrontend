@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { createListing, updateListing, uploadImage } from '../api';
 import { Camera, MapPin, Info, CheckCircle2, Loader2, X, Plus, ChevronDown, Filter, AlertCircle, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const categories = ['Lost', 'Found', 'Adoption'];
 const sizes = ['Small', 'Medium', 'Large', 'Unknown'];
@@ -30,6 +31,7 @@ export default function ListingForm({ listing = null, onSaved }) {
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
   const [activeDropdown, setActiveDropdown] = useState(null);
 
   const toggleDropdown = (name) => {
@@ -147,10 +149,14 @@ export default function ListingForm({ listing = null, onSaved }) {
     setError('');
 
     if (!validateForm()) return;
+    if (!recaptchaToken) {
+      setError('Please verify that you are not a robot.');
+      return;
+    }
 
     setSaving(true);
     try {
-      const payload = { ...form, images };
+      const payload = { ...form, images, recaptchaToken };
       const result = listing ? await updateListing(listing._id, payload) : await createListing(payload);
       onSaved(result.data);
     } catch (err) {
@@ -379,6 +385,14 @@ export default function ListingForm({ listing = null, onSaved }) {
             <Info className="w-4 h-4" /> {error}
           </motion.div>
         )}
+
+        <div className="flex justify-center pb-2">
+          <ReCAPTCHA
+            sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+            onChange={(token) => setRecaptchaToken(token)}
+            theme="dark"
+          />
+        </div>
         
         <button 
           type="submit" 
