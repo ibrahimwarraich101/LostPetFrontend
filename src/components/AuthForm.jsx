@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { loginUser, registerUser } from '../api';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, User as UserIcon, ArrowRight, Loader2, Info } from 'lucide-react';
+import { Mail, Lock, User as UserIcon, ArrowRight, Loader2, Info, Eye, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
@@ -10,6 +10,7 @@ export default function AuthForm({ mode, onAuth }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { executeRecaptcha } = useGoogleReCaptcha();
   const navigate = useNavigate();
 
@@ -155,13 +156,20 @@ export default function AuthForm({ mode, onAuth }) {
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <input 
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password" 
                 value={form.password} 
                 onChange={handleChange} 
                 placeholder="••••••••"
-                className={`w-full bg-white border-2 rounded-xl py-3.5 pl-11 pr-4 text-slate-900 focus:ring-4 focus:ring-brand-500/20 transition-all ${errors.password ? 'border-red-400 bg-red-50' : 'border-slate-100 focus:border-brand-500'}`} 
+                className={`w-full bg-white border-2 rounded-xl py-3.5 pl-11 pr-12 text-slate-900 focus:ring-4 focus:ring-brand-500/20 transition-all ${errors.password ? 'border-red-400 bg-red-50' : 'border-slate-100 focus:border-brand-500'}`} 
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
             </div>
             {errors.password && <p className="text-red-400 text-[10px] font-bold ml-1 uppercase">{errors.password}</p>}
             {mode === 'login' && (

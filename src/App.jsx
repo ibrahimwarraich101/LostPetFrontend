@@ -60,6 +60,14 @@ function App() {
     }
   }, [currentUser]);
 
+  // Handle double slash paths (common in email links)
+  useEffect(() => {
+    if (window.location.pathname.startsWith('//')) {
+      const normalizedPath = window.location.pathname.replace(/^\/+/, '/');
+      navigate(normalizedPath + window.location.search, { replace: true });
+    }
+  }, [navigate]);
+
   const logout = () => {
     setCurrentUser(null);
     navigate('/');
