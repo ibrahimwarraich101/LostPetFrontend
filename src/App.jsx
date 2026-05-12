@@ -14,6 +14,9 @@ import MyDonations from './components/MyDonations';
 import UserLayout from './components/UserLayout';
 import Navbar from './components/Navbar';
 import VerifyEmail from './components/VerifyEmail';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
+import NotFound from './components/NotFound';
 import { useLocation as useLocationRouter, Navigate } from 'react-router-dom';
 
 const UserPageRoute = ({ element, user, onLogout }) => {
@@ -73,6 +76,8 @@ function App() {
           <Route path="/login" element={<AuthForm mode="login" onAuth={setCurrentUser} />} />
           <Route path="/register" element={<AuthForm mode="register" onAuth={setCurrentUser} />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/dashboard" element={<UserPageRoute user={currentUser} onLogout={logout} element={<Dashboard user={currentUser} />} />} />
           <Route path="/profile" element={<UserPageRoute user={currentUser} onLogout={logout} element={<Profile user={currentUser} onUpdate={setCurrentUser} />} />} />
           <Route path="/favorites" element={<UserPageRoute user={currentUser} onLogout={logout} element={<Favorites user={currentUser} />} />} />
@@ -81,7 +86,7 @@ function App() {
           <Route path="/listing/:id" element={<ListingDetail user={currentUser} />} />
           <Route path="/admin" element={<ProtectedAdminRoute user={currentUser}><AdminPanel user={currentUser} /></ProtectedAdminRoute>} />
           <Route path="/settings" element={<UserPageRoute user={currentUser} onLogout={logout} element={<Settings user={currentUser} />} />} />
-          <Route path="*" element={<div className="py-20 text-center">Page not found.</div>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
     </div>

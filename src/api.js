@@ -17,6 +17,8 @@ http.interceptors.request.use((config) => {
 export const registerUser = (payload) => http.post('/auth/register', payload);
 export const loginUser = (payload) => http.post('/auth/login', payload);
 export const verifyEmail = (token) => http.get(`/auth/verify-email?token=${token}`);
+export const forgotPassword = (payload) => http.post('/auth/forgot-password', payload);
+export const resetPassword = (payload) => http.post('/auth/reset-password', payload);
 export const fetchListings = (params) => http.get('/listings', { params });
 export const fetchListingById = (id) => http.get(`/listings/${id}`);
 export const createListing = (payload) => http.post('/listings', payload);

@@ -159,6 +159,13 @@ export default function AuthForm({ mode, onAuth }) {
               />
             </div>
             {errors.password && <p className="text-red-400 text-[10px] font-bold ml-1 uppercase">{errors.password}</p>}
+            {mode === 'login' && (
+              <div className="text-right">
+                <Link to="/forgot-password" size="sm" className="text-[10px] font-black uppercase text-slate-500 hover:text-brand-400 transition-colors">
+                  Forgot Password?
+                </Link>
+              </div>
+            )}
           </div>
 
           {error && (
