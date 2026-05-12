@@ -158,7 +158,7 @@ export default function AdminPanel({ user }) {
                     : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 text-left whitespace-nowrap">
                   <item.icon className={`w-5 h-5 transition-transform group-hover:scale-110 ${activeTab === item.id ? 'text-slate-950' : 'text-brand-500/60'}`} />
                   {item.label}
                 </div>
